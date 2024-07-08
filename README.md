@@ -2,6 +2,8 @@
 
 This repository contains the firmware code and documentation for building a custom PIR (Passive Infrared) sensor module using ESP8266 firmware of ESPhome for integration with Home Assistant.
 
+<img src="./img1.jpg" alt="main" width="500px" height="700px"/>
+
 ## Table of Contents
 
 - [Introduction](#introduction)
