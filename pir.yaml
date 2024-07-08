@@ -1,0 +1,49 @@
+esphome:
+  name: pir_sensor
+  platform: ESP8266
+  board: nodemcuv2
+
+#Enable logging
+logger:
+
+uart:
+  baud_rate: 9600
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+    after:
+      delimiter: "\n"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+
+# Minimal configuration example, logs hex strings by default
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pir Living Fallback Hotspot"
+    password: "Izhn7JnKSLFt"
+
+captive_portal:
+
+# Define the binary sensor for the PIR motion detector
+binary_sensor:
+  - platform: gpio
+    pin: GPIO5
+    name: "PIR Sensor"
+    device_class: motion
+    filters:
+      - delayed_off: 90s # Keeps the sensor on for 10 seconds after motion stops
