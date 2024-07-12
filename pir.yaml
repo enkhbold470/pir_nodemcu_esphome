@@ -46,4 +46,4 @@ binary_sensor:
     name: "PIR Sensor"
     device_class: motion
     filters:
-      - delayed_off: 90s # Keeps the sensor on for 10 seconds after motion stops
+      - delayed_off: 10s # Keeps the sensor on for 10 seconds after motion stops

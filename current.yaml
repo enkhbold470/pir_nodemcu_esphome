@@ -1,0 +1,63 @@
+esphome:
+  name: current
+
+esp32:
+  board: lolin_s3
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: "NETGEAR38"
+  password: "mightygiant145"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Current Fallback Hotspot"
+    password: "qUEGK7ogwFq2"
+
+captive_portal:
+
+# Relay switch on GPIO11
+switch:
+  - platform: gpio
+    pin: GPIO11
+    name: "Relay Switch"
+
+# ACS712 current sensor on GPIO1
+sensor:
+  - platform: adc
+    pin: GPIO1
+    name: "ACS712 Current"
+    unit_of_measurement: "A"
+    id: acs712_current
+    update_interval: 1s
+    filters:
+      - multiply: 0.01 # 5A ACS712 sensor
+
+  - platform: template
+    name: "Power Wattage"
+    id: power_wattage
+    unit_of_measurement: "W"
+    accuracy_decimals: 2
+    lambda: |-
+      float current = id(acs712_current).state;
+      return current * 120.0;  // Assuming 120V mains voltage
+
+text_sensor:
+  - platform: template
+    name: "Power Consumption"
+    lambda: |-
+      char buffer[10];
+      snprintf(buffer, sizeof(buffer), "%.2f W", id(power_wattage).state);
+      return {buffer};

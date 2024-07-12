@@ -1,0 +1,45 @@
+esphome:
+  name: servo_switch
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+ota:
+  - platform: esphome
+    password: ""
+
+# Servo configuration
+servo:
+  - id: my_servo
+    output: pwm_output
+
+# PWM output for the servo
+output:
+  - platform: esp8266_pwm
+    id: pwm_output
+    pin: GPIO15
+    frequency: 50 Hz
+
+# Optional: Add a switch to control the servo via Home Assistant
+switch:
+  - platform: template
+    name: "Servo"
+    turn_off_action:
+      - servo.write:
+          id: my_servo
+          level: -90%
+      - delay: 1s
+    turn_on_action:
+      - servo.write:
+          id: my_servo
+          level: -10%
+      - delay: 1s
